@@ -13,12 +13,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '16'    # Problem: outdated Node version (Node 16 is EOL)
-      - run: npm install        # Problem: should be npm ci for reproducible installs
+          node-version: '20'    # Fix: updated from EOL Node 16 to Node 20 LTS
+      - run: npm ci              # Fix: reproducible installs using lockfile
 
   test:
     runs-on: ubuntu-latest
-    # Problem: missing `needs: install` — runs in parallel on a fresh machine
+    needs: install               # Fix: ensure install completes before test runs
     steps:
       - uses: actions/checkout@v4
-      - run: npm test           # Problem: no `npm ci` before test, node_modules missing
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci              # Fix: install node_modules before running tests
+      - run: npm test
