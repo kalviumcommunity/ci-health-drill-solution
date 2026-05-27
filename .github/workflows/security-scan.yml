@@ -7,7 +7,7 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    if: false    # Disabled — still broken, will fix in v1.1 "temp: disable scan until fixed"
+    # Fix: removed `if: false` — scan re-enabled (was disabled since commit af8ec1c)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,3 +15,4 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm audit --audit-level=high
+      - run: npm audit --audit-level=moderate  # Fix: broader vulnerability coverage
